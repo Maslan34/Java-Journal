@@ -27,6 +27,7 @@ public class LoginUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+
                 String email = fld_username.getText();
                 String password = new String(fld_password.getPassword());
 
@@ -74,13 +75,6 @@ public class LoginUI extends JFrame {
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.VERTICAL;
         MainContainer.add(spacer2, gbc);
-        lbl_top = new JLabel();
-        lbl_top.setText("Customer Management System");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        MainContainer.add(lbl_top, gbc);
         lbl_username = new JLabel();
         lbl_username.setText("Username");
         gbc = new GridBagConstraints();
@@ -123,6 +117,13 @@ public class LoginUI extends JFrame {
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         MainContainer.add(fld_username, gbc);
+        lbl_top = new JLabel();
+        lbl_top.setText("Customer Management System");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        MainContainer.add(lbl_top, gbc);
     }
 
     /**
