@@ -38,23 +38,43 @@ public class DashboardUI extends JFrame {
         // init table
         loadCustomerTable(null);
         loadCustomerPopUpMenu();
+        loadCustomerButtons();
         // init table
 
         setContentPane(pnl_main);
         setTitle("Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1000, 400);
+        setBounds(100, 100, 1500, 800);
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
 
-
+        
+        
         this.lbl_welcome.setText("Welcome Back " + this.user.getName());
         btn_exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dispose();
                 LoginUI loginUI = new LoginUI();
+            }
+        });
+
+    }
+
+    private void loadCustomerButtons() {
+
+        this.btn_customer_add.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CustomerUI customerUI = new CustomerUI(new Customer());
+                customerUI.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosed(WindowEvent e) {
+                        loadCustomerTable(null);
+                    }
+                });
             }
         });
     }
@@ -70,8 +90,17 @@ public class DashboardUI extends JFrame {
         });
 
         this.popup_customer_selection.add("Update").addActionListener(e-> {
-            int selectedID = Integer.parseInt(tbl_customer.getValueAt(tbl_customer.getSelectedRow(), 0).toString());
-            System.out.println(selectedID);
+            String selectedID = tbl_customer.getValueAt(tbl_customer.getSelectedRow(), 0).toString();
+
+            Customer editedCustomer = customerController.findById(selectedID);
+
+            CustomerUI customerUI = new CustomerUI(editedCustomer);
+            customerUI.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    loadCustomerTable(null);
+                }
+            });
 
         });
         this.popup_customer_selection.add("Delete").addActionListener(e-> {

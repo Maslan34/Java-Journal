@@ -6,10 +6,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 import com.mongodb.client.MongoCollection;
-
-import java.lang.reflect.Array;
+import org.bson.types.ObjectId;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class CustomerDao {
     private MongoDBConnection mongoDBConnection;
@@ -19,13 +18,18 @@ public class CustomerDao {
     }
 
 
-    public Customer findById(int id) {
+    public Customer findById(String id) {
         try {
             MongoCollection<Document> collection = MongoDBConnection.getCollection("Customers");
 
-            // Search Customer by ID
-            Document customerDoc = collection.find(Filters.eq("id", id)).first();
 
+            // Casting String to here MongoDb ObjectId
+            ObjectId objectId = new ObjectId(id);
+
+            // Search Customer by ID
+            Document customerDoc = collection.find(Filters.eq("_id", objectId)).first();
+
+            System.out.println(customerDoc);
             if (customerDoc != null) {
                 Customer customer = new Customer();
                 customer.setId(customerDoc.getObjectId("_id").toString());
@@ -41,6 +45,52 @@ public class CustomerDao {
             System.out.println("Error Finding Customer: " + e.getMessage());
         }
         return null;
+    }
+
+    public boolean update(Customer customer) {
+        try {
+            MongoCollection<Document> collection = MongoDBConnection.getCollection("Customers");
+
+
+            ObjectId objectId = new ObjectId(customer.getId());
+
+
+            Document updateFields = new Document()
+                    .append("name", customer.getName())
+                    .append("phone", customer.getPhone())
+                    .append("mail", customer.getMail())
+                    .append("address", customer.getAddress())
+                    .append("type", customer.getType().name()); // Enum'ı String olarak kaydediyoruz.
+
+
+            collection.updateOne(Filters.eq("_id", objectId), new Document("$set", updateFields));
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error Updating Customer: " + e.getMessage());
+            return false;
+        }
+    };
+
+    public boolean save(Customer customer) {
+        try {
+            MongoCollection<Document> collection = MongoDBConnection.getCollection("Customers");
+
+            // Yeni müşteri verisini oluştur
+            Document customerDoc = new Document()
+                    .append("name", customer.getName())
+                    .append("phone", customer.getPhone())
+                    .append("mail", customer.getMail())
+                    .append("address", customer.getAddress())
+                    .append("type", customer.getType().name());
+
+            collection.insertOne(customerDoc);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("Error Saving Customer: " + e.getMessage());
+            return false;
+        }
     }
 
     public ArrayList<Customer> findAll() {
@@ -65,7 +115,6 @@ public class CustomerDao {
         } catch (Exception e) {
             System.out.println("Error Fetching Customers: " + e.getMessage());
         }
-        //System.out.println(customers);
         return customers;
     }
 }

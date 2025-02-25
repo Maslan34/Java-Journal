@@ -1,5 +1,12 @@
 package View;
 
+import Business.UserController;
+import Core.Helper;
+import DAO.UserDao;
+import Entity.User;
+import com.intellij.uiDesigner.core.GridConstraints;
+import com.intellij.uiDesigner.core.GridLayoutManager;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,8 +20,10 @@ public class LoginUI extends JFrame {
     private JLabel lbl_username;
     private JLabel lbl_password;
     private JTextField fld_username;
+    private UserController userController;
 
     public LoginUI() {
+        this.userController = new UserController();
         this.setContentPane(MainContainer);
         this.setTitle("Login");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,21 +35,28 @@ public class LoginUI extends JFrame {
         btn_submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-                String email = fld_username.getText();
+                String username = fld_username.getText();
                 String password = new String(fld_password.getPassword());
+                System.out.println(username + " " + password);
+                // 🛠 Boş giriş kontrolü
+                if (Helper.isTextFieldListEmpty(new JTextField[]{fld_username, fld_password})) {
+                    JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                // Authentication
-                if (email.isEmpty() || password.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Please Enter a Email and Password!", "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (email.equals("admin@example.com") && password.equals("1234")) {
-                    JOptionPane.showMessageDialog(null, "Login Successful!", "successful", JOptionPane.INFORMATION_MESSAGE);
+                User user = userController.findByLogin(username, password);
+                System.out.println(user);
+                if (user != null) {
+
+                    JOptionPane.showMessageDialog(null, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    dispose();
+                    DashboardUI dashboardUI = new DashboardUI(user);
+
+                    System.out.println("User found: " + user);
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid email or password", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-
         });
     }
 
@@ -61,69 +77,23 @@ public class LoginUI extends JFrame {
      */
     private void $$$setupUI$$$() {
         MainContainer = new JPanel();
-        MainContainer.setLayout(new GridBagLayout());
-        final JPanel spacer1 = new JPanel();
-        GridBagConstraints gbc;
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        MainContainer.add(spacer1, gbc);
-        final JPanel spacer2 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        MainContainer.add(spacer2, gbc);
+        MainContainer.setLayout(new GridLayoutManager(7, 2, new Insets(0, 0, 0, 0), -1, -1));
         lbl_username = new JLabel();
         lbl_username.setText("Username");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.WEST;
-        MainContainer.add(lbl_username, gbc);
+        MainContainer.add(lbl_username, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         lbl_password = new JLabel();
         lbl_password.setText("Password");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        gbc.anchor = GridBagConstraints.WEST;
-        MainContainer.add(lbl_password, gbc);
+        MainContainer.add(lbl_password, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fld_password = new JPasswordField();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        MainContainer.add(fld_password, gbc);
+        MainContainer.add(fld_password, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         btn_submit = new JButton();
         btn_submit.setText("Submit");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        MainContainer.add(btn_submit, gbc);
-        final JPanel spacer3 = new JPanel();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.ipady = 50;
-        MainContainer.add(spacer3, gbc);
+        MainContainer.add(btn_submit, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fld_username = new JTextField();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        MainContainer.add(fld_username, gbc);
+        MainContainer.add(fld_username, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lbl_top = new JLabel();
         lbl_top.setText("Customer Management System");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        MainContainer.add(lbl_top, gbc);
+        MainContainer.add(lbl_top, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -132,5 +102,4 @@ public class LoginUI extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return MainContainer;
     }
-
 }
