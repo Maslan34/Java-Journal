@@ -22,6 +22,14 @@ public class CustomerController {
         return this.customerDao.save(customer);
     }
 
+    public boolean delete(Customer customer) {
+        return this.customerDao.delete(customer);
+    }
+
+    public ArrayList<Customer> filter(String name ,String type) {
+        return this.customerDao.filter(name,type);
+    }
+
     public boolean update(Customer customer) {
         if(customer.getId() == null) {
             JOptionPane.showMessageDialog(null, "Customer Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);

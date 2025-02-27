@@ -62,4 +62,16 @@ public class Helper {
         }
         return true;
     }
+
+    public static boolean confirmDelete(String str){
+        String msgg="Are you sure you want to delete this record?";
+        String msg;
+
+        if(str.equals("sure"))
+            msg="Are you sure you want to delete this customer?";
+        else {
+            msg=str;
+        }
+        return JOptionPane.showConfirmDialog(null, msg, msg, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
 }

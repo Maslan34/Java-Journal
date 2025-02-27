@@ -1,6 +1,7 @@
 package View;
 
 import Business.CustomerController;
+import Core.Helper;
 import Entity.Customer;
 import Entity.User;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -48,9 +49,10 @@ public class DashboardUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
+        this.cmb_customer_type.setModel(new DefaultComboBoxModel<>(Customer.ETYPE.values()));
+        this.cmb_customer_type.setSelectedItem(null);
 
-        
-        
+
         this.lbl_welcome.setText("Welcome Back " + this.user.getName());
         btn_exit.addActionListener(new ActionListener() {
             @Override
@@ -60,6 +62,15 @@ public class DashboardUI extends JFrame {
             }
         });
 
+        btn_customer_filter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Customer> arrayList = new ArrayList<>();
+                arrayList = customerController.filter(fld_customer_name.getText(), cmb_customer_type.getSelectedItem().toString());
+                System.out.println("here" + arrayList);
+                loadCustomerTable(arrayList);
+            }
+        });
     }
 
     private void loadCustomerButtons() {
@@ -89,7 +100,7 @@ public class DashboardUI extends JFrame {
 
         });
 
-        this.popup_customer_selection.add("Update").addActionListener(e-> {
+        this.popup_customer_selection.add("Update").addActionListener(e -> {
             String selectedID = tbl_customer.getValueAt(tbl_customer.getSelectedRow(), 0).toString();
 
             Customer editedCustomer = customerController.findById(selectedID);
@@ -103,28 +114,38 @@ public class DashboardUI extends JFrame {
             });
 
         });
-        this.popup_customer_selection.add("Delete").addActionListener(e-> {
+        this.popup_customer_selection.add("Delete").addActionListener(e -> {
+            String selectedID = tbl_customer.getValueAt(tbl_customer.getSelectedRow(), 0).toString();
+            if (Helper.confirmDelete("sure")) {
+                Customer deletedCustomer = customerController.findById(selectedID);
+                customerController.delete(deletedCustomer);
+                loadCustomerTable(null);
+            }
+
 
         });
         this.tbl_customer.setComponentPopupMenu(popup_customer_selection);
     }
 
     private void loadCustomerTable(ArrayList<Customer> customers) {
-        Object[] columnCustomer = {"ID", "Name", "Address", "Phone", "Email","Type"};
+        Object[] columnCustomer = {"ID", "Name", "Address", "Phone", "Email", "Type"};
         this.table_model_customer.setColumnIdentifiers(columnCustomer);
 
-        ArrayList<Customer> customersFetched = new ArrayList<>();
-        if(customers == null) {
-
-            customersFetched = customerController.findAll();
-        }
 
         // Clearing Table
         DefaultTableModel clearModel = (DefaultTableModel) this.tbl_customer.getModel();
         clearModel.setRowCount(0);
         // Clearing Table
 
-        for(Customer customer : customersFetched) {
+
+        ArrayList<Customer> customersFetched = new ArrayList<>();
+        if (customers == null) {
+            customersFetched = customerController.findAll();
+        } else
+            customersFetched = customers;
+
+
+        for (Customer customer : customersFetched) {
             this.table_model_customer.addRow(new Object[]{
                     customer.getId(),
                     customer.getName(),
@@ -138,6 +159,7 @@ public class DashboardUI extends JFrame {
         this.tbl_customer.getTableHeader().setReorderingAllowed(false);
         this.tbl_customer.getColumnModel().getColumn(0).setMaxWidth(50);
         this.tbl_customer.setEnabled(false);
+
     }
 
     {
@@ -183,7 +205,7 @@ public class DashboardUI extends JFrame {
         lbl_customer_filter.setText("Customer Name");
         panel2.add(lbl_customer_filter, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         lbl_customer_type = new JLabel();
-        lbl_customer_type.setText("Label");
+        lbl_customer_type.setText("Customer Type");
         panel2.add(lbl_customer_type, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cmb_customer_type = new JComboBox();
         panel2.add(cmb_customer_type, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
