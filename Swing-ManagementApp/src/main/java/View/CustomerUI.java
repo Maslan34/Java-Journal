@@ -43,7 +43,7 @@ public class CustomerUI extends JFrame {
         this.cmb_type.setModel(new DefaultComboBoxModel<>(Customer.ETYPE.values()));
         // init combo box
 
-        System.out.println(customer.getType());
+
         if (customer.getId() == null) {
             this.setTitle("Add New Customer");
         }
@@ -73,7 +73,7 @@ public class CustomerUI extends JFrame {
                     customer.setName(fld_name.getText());
                     customer.setAddress(txtArea_adress.getText());
                     customer.setType((Customer.ETYPE) cmb_type.getSelectedItem());
-                    System.out.println(customer.getId());
+
                     if (customer.getId() == null || customer.getId().toString().isEmpty()) {
 
                         result = customerController.save(customer);

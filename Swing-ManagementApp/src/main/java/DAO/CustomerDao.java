@@ -62,7 +62,7 @@ public class CustomerDao {
                     .append("phone", customer.getPhone())
                     .append("mail", customer.getMail())
                     .append("address", customer.getAddress())
-                    .append("type", customer.getType().name()); // Enum'ı String olarak kaydediyoruz.
+                    .append("type", customer.getType().name()); // Saving the Enum as a String.
 
 
             collection.updateOne(Filters.eq("_id", objectId), new Document("$set", updateFields));
@@ -78,7 +78,7 @@ public class CustomerDao {
         try {
             MongoCollection<Document> collection = MongoDBConnection.getCollection("Customers");
 
-            // Yeni müşteri verisini oluştur
+            // Create new customer data
             Document customerDoc = new Document()
                     .append("name", customer.getName())
                     .append("phone", customer.getPhone())
@@ -104,18 +104,18 @@ public class CustomerDao {
 
         if (name != null && type != null) {
             filter = Filters.and(
-                    Filters.regex("name", ".*" + name + ".*", "i"),  // İsmi içerenleri büyük/küçük harfe duyarsız filtrele
-                    Filters.eq("type", type) // Türü tam eşleşme olarak filtrele
+                    Filters.regex("name", ".*" + name + ".*", "i"),  // Filter entries containing the name case-insensitively.
+                    Filters.eq("type", type) // Filter by exact match of the type.
             );
         } else if (name == null && type != null) {
-            filter = Filters.eq("type", type); // Sadece türü eşleşenleri getir
+            filter = Filters.eq("type", type);// Retrieve only the entries that match the type.
         } else if (name != null && type == null) {
-            filter = Filters.regex("name", ".*" + name + ".*", "i"); // Sadece ismi içerenleri getir
+            filter = Filters.regex("name", ".*" + name + ".*", "i"); // Retrieve only the entries that contain the name.
         } else {
-            return new ArrayList<>(); // Eğer hiçbir kriter yoksa boş liste döndür
+            return new ArrayList<>();// Return an empty list if no criteria are provided.
         }
 
-        // MongoDB'den verileri çekip listeye ekliyoruz
+        // Fetching data from MongoDB and adding it to the list.
         FindIterable<Document> results = collection.find(filter);
         for (Document customerDoc : results) {
             Customer customer = new Customer();
@@ -128,7 +128,6 @@ public class CustomerDao {
 
             customers.add(customer);
         }
-        System.out.println("customers"+customers);
         return customers;
     }
 

@@ -63,15 +63,36 @@ public class Helper {
         return true;
     }
 
-    public static boolean confirmDelete(String str){
-        String msgg="Are you sure you want to delete this record?";
-        String msg;
+    public static boolean confirmDelete(String str) {
+        String title = "";
+        String msg = "";
 
-        if(str.equals("sure"))
-            msg="Are you sure you want to delete this customer?";
-        else {
-            msg=str;
+
+        switch (str) {
+            case "sure_product":
+                msg = "Are you sure you want to delete this product?";
+                title = "Confirm Product Delete Process";
+                break;
+            case "sure_customer":
+                msg = "Are you sure you want to delete this customer?";
+                title = "Confirm Customer Delete Process";
+                break;
         }
-        return JOptionPane.showConfirmDialog(null, msg, msg, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+
+        return JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
+
+    public static void showMessage(String code) {
+
+        switch (code) {
+            case "SUCCESS_UPDATE_PRODUCT":
+                JOptionPane.showMessageDialog(null, "Product Updated Successfuly!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "FAIL_UPDATE_PRODUCT":
+                JOptionPane.showMessageDialog(null, "Product  Not Updated Successfuly!", "Fail", JOptionPane.INFORMATION_MESSAGE);
+                break;
+
+        }
+
     }
 }
