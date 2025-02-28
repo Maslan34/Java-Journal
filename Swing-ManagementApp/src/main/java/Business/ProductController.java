@@ -7,6 +7,7 @@ import Entity.Product;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class ProductController {
 
@@ -29,11 +30,11 @@ public class ProductController {
     public boolean delete(Product product) {
         return this.productDao.delete(product);
     }
-/*
-    public ArrayList<Customer> filter(String name ,String type) {
-        return this.customerDao.filter(name,type);
+
+    public ArrayList<Product> filter(String name , String code,int stock) {
+        return this.productDao.filter(name,code,stock);
     }
- */
+
     public boolean update(Product product) {
         if(product.getId() == null) {
             JOptionPane.showMessageDialog(null, "Product Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);

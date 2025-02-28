@@ -12,6 +12,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class ProductDao {
 
@@ -95,41 +96,43 @@ public class ProductDao {
         }
     }
 
-    public ArrayList<Customer> filter(String name, String type) {
-        ArrayList<Customer> customers = new ArrayList<>();
-        MongoCollection<Document> collection = MongoDBConnection.getCollection("Customers");
+    public ArrayList<Product> filter(String name, String code, Integer stock) {
+        ArrayList<Product> products = new ArrayList<>();
+        MongoCollection<Document> collection = MongoDBConnection.getCollection("Products");
 
-        System.out.println("type"+type);
-        Bson filter;
+        ArrayList<Bson> filters = new ArrayList<>();
 
-        if (name != null && type != null) {
-            filter = Filters.and(
-                    Filters.regex("name", ".*" + name + ".*", "i"),  // İsmi içerenleri büyük/küçük harfe duyarsız filtrele
-                    Filters.eq("type", type) // Türü tam eşleşme olarak filtrele
-            );
-        } else if (name == null && type != null) {
-            filter = Filters.eq("type", type); // Sadece türü eşleşenleri getir
-        } else if (name != null && type == null) {
-            filter = Filters.regex("name", ".*" + name + ".*", "i"); // Sadece ismi içerenleri getir
-        } else {
-            return new ArrayList<>(); // Eğer hiçbir kriter yoksa boş liste döndür
+        if (name != null) {
+            filters.add(Filters.regex("name", ".*" + name + ".*", "i")); // Filter records containing the name, case-insensitive
+        }
+        if (code != null) {
+            filters.add(Filters.regex("code", ".*" + code + ".*", "i")); // Filter records containing the code, case-insensitive
         }
 
-        // MongoDB'den verileri çekip listeye ekliyoruz
+        if (stock != null) {
+            if (stock == 1) {
+                filters.add(Filters.gt("stock", 0)); // Stokta olanları getir (stock > 0)
+            } else if (stock == 2) {
+                filters.add(Filters.eq("stock", 0));
+            }
+        }
+
+        Bson filter = filters.isEmpty() ? new Document() : Filters.and(filters);
+
+        // Fetch data from MongoDB and add it to the list
         FindIterable<Document> results = collection.find(filter);
-        for (Document customerDoc : results) {
-            Customer customer = new Customer();
-            customer.setId(customerDoc.getObjectId("_id").toString());
-            customer.setName(customerDoc.getString("name"));
-            customer.setPhone(customerDoc.getString("phone"));
-            customer.setMail(customerDoc.getString("mail"));
-            customer.setAddress(customerDoc.getString("address"));
-            customer.setType(Customer.ETYPE.valueOf(customerDoc.getString("type")));
+        for (Document productDoc : results) {
+            Product product = new Product();
+            product.setId(productDoc.getObjectId("_id").toString());
+            product.setName(productDoc.getString("name"));
+            product.setCode(productDoc.getString("code"));
+            product.setPrice(productDoc.getInteger("price"));
+            product.setStock(productDoc.getInteger("stock"));
 
-            customers.add(customer);
+            products.add(product);
         }
-        System.out.println("customers"+customers);
-        return customers;
+        System.out.println("Filtered Products: " + products);
+        return products;
     }
 
 

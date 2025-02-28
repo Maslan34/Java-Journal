@@ -2,6 +2,7 @@ package View;
 
 import Business.CustomerController;
 import Business.ProductController;
+import Core.ComboBoxItem;
 import Core.Helper;
 import Entity.Customer;
 import Entity.Product;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class DashboardUI extends JFrame {
@@ -39,7 +41,7 @@ public class DashboardUI extends JFrame {
     private JLabel lbl_product_code;
     private JTextField fld_product_code;
     private JLabel lbl_isStock;
-    private JComboBox cmb_isStock;
+    private JComboBox<ComboBoxItem> cmb_isStock;
     private JButton btn_product_filter;
     private JButton btn_product_clear;
     private JButton btn_product_add;
@@ -53,7 +55,6 @@ public class DashboardUI extends JFrame {
 
     public DashboardUI(User user) {
         this.user = user;
-
 
 
         setContentPane(pnl_main);
@@ -89,25 +90,18 @@ public class DashboardUI extends JFrame {
             }
         });
 
-        btn_customer_filter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ArrayList<Customer> arrayList = new ArrayList<>();
-                arrayList = customerController.filter(fld_customer_name.getText(), cmb_customer_type.getSelectedItem().toString());
-                loadCustomerTable(arrayList);
-            }
-        });
-
-
 
         // PRODUCT TAB
+        this.cmb_isStock.addItem(new ComboBoxItem(1, "In Stock"));
+        this.cmb_isStock.addItem(new ComboBoxItem(2, "Out Stock"));
+        this.cmb_isStock.setSelectedItem(null);
 
 
 
     }
 
 
-
+    // CUSTOMER Functions
 
     private void loadCustomerButtons() {
 
@@ -124,6 +118,25 @@ public class DashboardUI extends JFrame {
                 });
             }
         });
+
+        btn_customer_clear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fld_customer_name.setText(null);
+                cmb_customer_type.setSelectedItem(null);
+                loadCustomerTable(null);
+            }
+        });
+
+        btn_customer_filter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<Customer> arrayList = new ArrayList<>();
+                arrayList = customerController.filter(fld_customer_name.getText(), cmb_customer_type.getSelectedItem().toString());
+                loadCustomerTable(arrayList);
+            }
+        });
+
     }
 
     private void loadCustomerPopUpMenu() {
@@ -201,8 +214,7 @@ public class DashboardUI extends JFrame {
     }
 
 
-
-    // PRODUCT
+    // PRODUCT Functions
 
     private void loadProductTable(ArrayList<Product> products) {
         Object[] columnProduct = {"ID", "Name", "Code", "Price", "Stock"};
@@ -240,7 +252,6 @@ public class DashboardUI extends JFrame {
     }
 
 
-
     private void loadProductPopUpMenu() {
         this.tbl_product.addMouseListener(new MouseAdapter() {
             @Override
@@ -257,7 +268,6 @@ public class DashboardUI extends JFrame {
             Product editedProduct = productController.findById(selectedID);
 
 
-
             ProductUI productUI = new ProductUI(editedProduct);
             productUI.addWindowListener(new WindowAdapter() {
                 @Override
@@ -265,7 +275,6 @@ public class DashboardUI extends JFrame {
                     loadProductTable(null);
                 }
             });
-
 
 
         });
@@ -297,6 +306,31 @@ public class DashboardUI extends JFrame {
                 });
 
 
+            }
+        });
+
+
+        btn_product_clear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fld_product_name.setText(null);
+                fld_product_code.setText(null);
+                cmb_isStock.setSelectedItem(null);
+                loadProductTable(null);
+            }
+        });
+
+
+        this.btn_product_filter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ComboBoxItem item = (ComboBoxItem) cmb_isStock.getSelectedItem();
+                int stock = -1;
+                if(item != null)
+                    stock = item.getKey();
+
+                ArrayList<Product> products = productController.filter(fld_product_name.getText(),fld_product_code.getText(),stock);
+                loadProductTable(products);
             }
         });
     }
@@ -376,12 +410,12 @@ public class DashboardUI extends JFrame {
         fld_product_name = new JTextField();
         pnl_middle_product.add(fld_product_name, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lbl_product_code = new JLabel();
-        lbl_product_code.setText("Label");
+        lbl_product_code.setText("Code");
         pnl_middle_product.add(lbl_product_code, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fld_product_code = new JTextField();
         pnl_middle_product.add(fld_product_code, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         lbl_isStock = new JLabel();
-        lbl_isStock.setText("Label");
+        lbl_isStock.setText("Stock");
         pnl_middle_product.add(lbl_isStock, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cmb_isStock = new JComboBox();
         pnl_middle_product.add(cmb_isStock, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
