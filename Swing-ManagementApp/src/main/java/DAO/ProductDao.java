@@ -1,7 +1,6 @@
 package DAO;
 
 import Core.MongoDBConnection;
-import Entity.Customer;
 import Entity.Product;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -12,7 +11,7 @@ import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Optional;
+
 
 public class ProductDao {
 
