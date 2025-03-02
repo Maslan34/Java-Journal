@@ -1,15 +1,13 @@
 package View;
 
 import Business.BasketController;
+import Business.CartController;
 import Business.CustomerController;
 import Business.ProductController;
 import Core.ComboBoxBasketItem;
 import Core.ComboBoxItem;
 import Core.Helper;
-import Entity.Basket;
-import Entity.Customer;
-import Entity.Product;
-import Entity.User;
+import Entity.*;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
@@ -17,13 +15,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class DashboardUI extends JFrame {
     private JButton btn_exit;
     private JPanel pnl_main;
     private JLabel lbl_welcome;
-    private JTabbedPane pnl_customer;
+    private JTabbedPane pnl_orders;
     private JPanel pnl_tapped_customer;
     private JTable tbl_customer;
     private JComboBox cmb_customer_type;
@@ -59,20 +58,23 @@ public class DashboardUI extends JFrame {
     private JLabel lbl_product_number;
     private JTable tbl_basket;
     private JLabel lbl_basket_count;
+    private JScrollPane scroll_orders;
+    private JTable tbl_orders;
     private User user;
     private Basket basket = new Basket();
     private final CustomerController customerController = new CustomerController();
     private final ProductController productController = new ProductController();
     private final BasketController basketController = new BasketController();
+    private final CartController cartController = new CartController();
     private DefaultTableModel table_model_customer = new DefaultTableModel();
     private DefaultTableModel table_model_basket = new DefaultTableModel();
     private DefaultTableModel table_model_product = new DefaultTableModel();
+    private DefaultTableModel table_model_orders = new DefaultTableModel();
     private JPopupMenu popup_customer_selection = new JPopupMenu();
     private JPopupMenu popup_product_selection = new JPopupMenu();
 
     public DashboardUI(User user) {
         this.user = user;
-
 
         setContentPane(pnl_main);
         setTitle("Dashboard");
@@ -86,6 +88,7 @@ public class DashboardUI extends JFrame {
         loadCustomerTable(null);
         loadProductTable(null);
         loadBasketTable();
+        loadOrdersTable();
         loadCustomerPopUpMenu();
         loadProductPopUpMenu();
         loadCustomerButtons();
@@ -123,7 +126,41 @@ public class DashboardUI extends JFrame {
                 loadBasketTable();
             }
         });
+        btn_basket_create.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ComboBoxBasketItem item = (ComboBoxBasketItem) cmb_basket_customers.getSelectedItem();
+                    String customerId = item.getId();
+                    Customer customer = customerController.findById(customerId);
+                    ArrayList<Product> products = basketController.findBasket(basket.get_id());
+                    System.out.println(products);
+                    if (products.isEmpty() == true) {
+                        Helper.showMessage("CART_EMPTY");
+                    } else {
+                        CartUI cart = new CartUI(customer, basket);
+                        cart.addWindowListener(new WindowAdapter() {
+                            @Override
+                            public void windowClosed(WindowEvent e) {
+                                basket.set_id(null);
+                                loadBasketTable();
+                                loadProductTable(null);
+                                loadOrdersTable();
+
+
+                            }
+                        });
+                    }
+                } catch (NullPointerException ex) {
+                    Helper.showMessage("CART_SELECT_CUSTOMER");
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+            }
+        });
     }
+
 
 
     // CUSTOMER Functions
@@ -261,7 +298,6 @@ public class DashboardUI extends JFrame {
         } else
             productsFetched = products;
 
-        System.out.println("products->" + productsFetched);
 
         for (Product product : productsFetched) {
             this.table_model_product.addRow(new Object[]{
@@ -319,12 +355,12 @@ public class DashboardUI extends JFrame {
             if (stock <= 0)
                 Helper.showMessage("PRODUCT_STOCK_INSUFFICIENT");
             else {
-                System.out.println("Eklenen Ürün ->" + fetchedProduct.getId());
+
                 this.basket.setProduct(fetchedProduct);
-                //System.out.println(this.basket.getProduct());
+
                 String result = basketController.save(this.basket);
                 basket.set_id(result);
-                //System.out.println("Basket Id-> " + this.basket.get_id());
+                System.out.println("Basket Id-> " + this.basket.get_id());
 
                 loadBasketTable();
 
@@ -462,17 +498,47 @@ public class DashboardUI extends JFrame {
 
         this.cmb_basket_customers.removeAllItems();
         for (Customer customer : customers) {
-            this.cmb_basket_customers.addItem(new ComboBoxBasketItem(customer.getId(),customer.getName()));
+            this.cmb_basket_customers.addItem(new ComboBoxBasketItem(customer.getId(), customer.getName()));
         }
 
         this.cmb_basket_customers.setSelectedItem(null);
     }
 
 
+    // ORDER TAB
 
 
+    private void loadOrdersTable() {
 
+        Object[] columnOrders= {"ID", "Customer Name", "Product Name", "Price", "Date" ,"Note"};
+        this.table_model_orders.setColumnIdentifiers(columnOrders);
 
+        // Clearing Table
+        DefaultTableModel clearModel = (DefaultTableModel) this.tbl_orders.getModel();
+        clearModel.setRowCount(0);
+        // Clearing Table
+
+        ArrayList<Cart> orders= cartController.findAll();
+
+        for (Cart cart : orders) {
+            for (Product product : cart.getProducts()) { // ✅ Her ürün için ayrı satır oluştur
+                this.table_model_orders.addRow(new Object[]{
+                        cart.getId(),
+                        cart.getCustomer().getName(),
+                        product.getName(),
+                        product.getPrice(),
+                        cart.getDate(),
+                        cart.getNote()
+                });
+            }
+        }
+
+        this.tbl_orders.setModel(this.table_model_orders);
+        this.tbl_orders.getTableHeader().setReorderingAllowed(false);
+        this.tbl_orders.getColumnModel().getColumn(0).setMaxWidth(50);
+        this.tbl_orders.setEnabled(false);
+
+    }
 
 
 
@@ -503,11 +569,11 @@ public class DashboardUI extends JFrame {
         btn_exit.setHorizontalAlignment(0);
         btn_exit.setText("Exit");
         panel1.add(btn_exit, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        pnl_customer = new JTabbedPane();
-        pnl_main.add(pnl_customer, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        pnl_orders = new JTabbedPane();
+        pnl_main.add(pnl_orders, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         pnl_tapped_customer = new JPanel();
         pnl_tapped_customer.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        pnl_customer.addTab("Customer", pnl_tapped_customer);
+        pnl_orders.addTab("Customer", pnl_tapped_customer);
         scroll_customer = new JScrollPane();
         pnl_tapped_customer.add(scroll_customer, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tbl_customer = new JTable();
@@ -536,7 +602,7 @@ public class DashboardUI extends JFrame {
         panel2.add(fld_customer_name, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         pnl_product = new JPanel();
         pnl_product.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        pnl_customer.addTab("Product", pnl_product);
+        pnl_orders.addTab("Product", pnl_product);
         scroll_product = new JScrollPane();
         pnl_product.add(scroll_product, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tbl_product = new JTable();
@@ -570,7 +636,7 @@ public class DashboardUI extends JFrame {
         pnl_middle_product.add(btn_product_add, new GridConstraints(1, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         pnl_basket = new JPanel();
         pnl_basket.setLayout(new GridLayoutManager(3, 6, new Insets(0, 0, 0, 0), -1, -1));
-        pnl_customer.addTab("Create Order", pnl_basket);
+        pnl_orders.addTab("Create Order", pnl_basket);
         pnl_basket_top = new JPanel();
         pnl_basket_top.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         pnl_basket.add(pnl_basket_top, new GridConstraints(2, 0, 1, 6, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -601,6 +667,13 @@ public class DashboardUI extends JFrame {
         lbl_basket_count = new JLabel();
         lbl_basket_count.setText("0 Item");
         pnl_basket.add(lbl_basket_count, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        pnl_orders.addTab("Orders", panel3);
+        scroll_orders = new JScrollPane();
+        panel3.add(scroll_orders, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        tbl_orders = new JTable();
+        scroll_orders.setViewportView(tbl_orders);
     }
 
     /**

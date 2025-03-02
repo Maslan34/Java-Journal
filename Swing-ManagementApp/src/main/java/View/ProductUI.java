@@ -2,7 +2,6 @@ package View;
 
 import Business.ProductController;
 import Core.Helper;
-import Entity.Customer;
 import Entity.Product;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
