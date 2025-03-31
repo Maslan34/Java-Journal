@@ -1,4 +1,4 @@
-package BoxGame;
+package CapstoneProjects.BoxGame;
 
 import java.util.Random;
 public class Ring {

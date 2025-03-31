@@ -1,4 +1,4 @@
-package BoxGame;
+package CapstoneProjects.BoxGame;
 
 public class Main {
     public static void main(String[] args) {
