@@ -6,6 +6,7 @@ public class Player {
     private int damage;
     private int health;
     private int coin;
+    private Inventory inventory;
     private String playerName;
 
     private static Scanner input = new Scanner(System.in);
@@ -46,6 +47,13 @@ public class Player {
         this.playerName = playerName;
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
 
     public void selectCharacter() {
         GameCharacter[] characters = {new Samurai(), new Archer(), new Knight(),};
@@ -92,4 +100,5 @@ public class Player {
                 this.getHealth(),
                 this.getCoin());
     }
+
 }
