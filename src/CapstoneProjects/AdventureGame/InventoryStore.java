@@ -98,7 +98,43 @@ public class InventoryStore extends NormalLocation {
 
     }
 
+
     public void exhibitArmors() {
+
+        System.out.println("-------------- Armors --------------");
+        for(Armor a : Armor.getAllArmors())
+            System.out.println(a.toString());
+        System.out.println("Please Select An Armor");
+        int selectedArmor = input.nextInt();
+        while(selectedArmor<1 || selectedArmor> Armor.getAllArmors().length) {
+            System.out.println("Invalid input. Please Enter a valid number.");
+            selectedArmor = input.nextInt();
+        }
+
+        purchaseArmor(selectedArmor);
+    }
+
+
+    public void purchaseArmor(int selectedArmor) {
+        System.out.println(getPlayer().getInventory().getArmor());
+        Armor armor= Armor.getAllArmors()[selectedArmor-1];
+        if(armor.getPrice()>getPlayer().getCoin())
+            System.out.println("Your coin is insufficient to buy this weapon.\nPlease choose a cheaper one or try again after earning some coin.");
+        else if(getPlayer().getInventory().getArmor() !=null && getPlayer().getInventory().getArmor().getId() == armor.getId())
+            System.out.println("You have already this armor!");
+        else{
+            System.out.println("You have purchased "+ armor.getName()+" armor!");
+
+
+            getPlayer().setCoin(getPlayer().getCoin() - armor.getPrice());
+            getPlayer().getInventory().setArmor(armor);
+
+            System.out.println("Your remaining coin: "+getPlayer().getCoin());
+
+        }
+        System.out.println(getPlayer().getCoin());
+        System.out.println(getPlayer().getInventory().getArmor());
+
 
     }
 }
