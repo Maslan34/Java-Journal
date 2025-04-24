@@ -1,4 +1,8 @@
-package CapstoneProjects.AdventureGame;
+package CapstoneProjects.AdventureGame.Locations.Normal;
+
+import CapstoneProjects.AdventureGame.Inventory.Armor;
+import CapstoneProjects.AdventureGame.Inventory.Weapon;
+import CapstoneProjects.AdventureGame.Player;
 
 public class InventoryStore extends NormalLocation {
 

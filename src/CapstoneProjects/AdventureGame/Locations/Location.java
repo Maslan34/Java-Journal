@@ -1,4 +1,6 @@
-package CapstoneProjects.AdventureGame;
+package CapstoneProjects.AdventureGame.Locations;
+
+import CapstoneProjects.AdventureGame.Player;
 
 import java.util.Scanner;
 

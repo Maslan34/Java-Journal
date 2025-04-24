@@ -1,4 +1,6 @@
-package CapstoneProjects.AdventureGame;
+package CapstoneProjects.AdventureGame.Locations.Normal;
+
+import CapstoneProjects.AdventureGame.Player;
 
 public class SafeHouse extends NormalLocation {
     public SafeHouse(Player player) {

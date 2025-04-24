@@ -1,4 +1,4 @@
-package CapstoneProjects.AdventureGame;
+package CapstoneProjects.AdventureGame.Inventory;
 
 public class Inventory {
     private Weapon weapon;

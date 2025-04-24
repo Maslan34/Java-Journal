@@ -1,4 +1,4 @@
-package CapstoneProjects.AdventureGame;
+package CapstoneProjects.AdventureGame.Character;
 
 public abstract  class GameCharacter {
     private int id;

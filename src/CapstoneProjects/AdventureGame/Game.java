@@ -1,9 +1,16 @@
 package CapstoneProjects.AdventureGame;
 
+import CapstoneProjects.AdventureGame.Inventory.Inventory;
+import CapstoneProjects.AdventureGame.Locations.Battle.Cave;
+import CapstoneProjects.AdventureGame.Locations.Battle.Forest;
+import CapstoneProjects.AdventureGame.Locations.Battle.River;
+import CapstoneProjects.AdventureGame.Locations.Location;
+import CapstoneProjects.AdventureGame.Locations.Normal.InventoryStore;
+import CapstoneProjects.AdventureGame.Locations.Normal.SafeHouse;
+
 import java.util.Scanner;
 
 public class Game {
-
 
 
     public void startGame() {
@@ -19,11 +26,12 @@ public class Game {
         Inventory inventory = new Inventory();
         player.setInventory(inventory);
         Location loc = null;
-        while(true) {
+        while (true) {
 
             boolean isValid = false;
 
-            System.out.println("\nLocations: \n1-Safe House\n2-Inventory Store");
+            System.out.println("\n\nLocations: \n1-Safe House --> This is a safe house for you. There are no monsters here and you can regenerate your health here." +
+                    "\n2-Inventory Store --> You can purchase Weapons or Armor.\n3-Cave --> Reward<Food> Enter Cave\n4-Forest --> Reward<Wood> Enter Forest\n5-River --> Reward<Water> Enter River");
 
             while (!isValid) {
                 System.out.print("Please select a location you want to go: ");
@@ -39,6 +47,18 @@ public class Game {
                             loc = new InventoryStore(player);
                             isValid = true;
                             break;
+                        case 3:
+                            loc = new Cave(player);
+                            isValid = true;
+                            break;
+                        case 4:
+                            loc = new Forest(player);
+                            isValid = true;
+                            break;
+                        case 5:
+                            loc = new River(player);
+                            isValid = true;
+                            break;
                         default:
                             System.out.println("Invalid selection. Please enter a valid number.");
                             break;
@@ -49,7 +69,7 @@ public class Game {
                 }
             }
 
-            if(!loc.onLocation()){
+            if (!loc.onLocation()) {
                 System.out.println("You Died! Game is Over!");
                 break;
             }

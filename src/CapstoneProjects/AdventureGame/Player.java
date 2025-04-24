@@ -1,5 +1,11 @@
 package CapstoneProjects.AdventureGame;
 
+import CapstoneProjects.AdventureGame.Character.Archer;
+import CapstoneProjects.AdventureGame.Character.GameCharacter;
+import CapstoneProjects.AdventureGame.Character.Knight;
+import CapstoneProjects.AdventureGame.Character.Samurai;
+import CapstoneProjects.AdventureGame.Inventory.Inventory;
+
 import java.util.Scanner;
 
 public class Player {
