@@ -5,12 +5,16 @@ public class Monster {
     private int damage;
     private int health;
     private String monsterName;
+    private int prize;
+    private int fullHealth;
 
-    public Monster(int id, int damage, int health, String monsterName) {
+    public Monster(int id, int damage, int health, String monsterName, int prize) {
         this.id = id;
         this.damage = damage;
         this.health = health;
+        this.fullHealth = health;
         this.monsterName = monsterName;
+        this.prize = prize;
     }
 
     public int getId() {
@@ -43,5 +47,13 @@ public class Monster {
 
     public void setMonsterName(String monsterName) {
         this.monsterName = monsterName;
+    }
+
+    public int getPrize() {
+        return prize;
+    }
+
+    public int getFullHealth() {
+        return fullHealth;
     }
 }

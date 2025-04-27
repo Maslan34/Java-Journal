@@ -3,6 +3,9 @@ package CapstoneProjects.AdventureGame.Inventory;
 public class Inventory {
     private Weapon weapon;
     private Armor armor;
+    private boolean isWoodObtained = false;
+    private boolean isWaterObtained = false;
+    private boolean isFoodObtained = false;
 
 
     public Inventory() {
@@ -27,4 +30,27 @@ public class Inventory {
         this.armor = armor;
     }
 
+    public void setWoodObtained() {
+        isWoodObtained = true;
+    }
+
+    public void setWaterObtained() {
+        isWaterObtained = true;
+    }
+
+    public void setFoodObtained() {
+        isFoodObtained = true;
+    }
+
+    public boolean isWoodObtained() {
+        return isWoodObtained;
+    }
+
+    public boolean isWaterObtained() {
+        return isWaterObtained;
+    }
+
+    public boolean isFoodObtained() {
+        return isFoodObtained;
+    }
 }

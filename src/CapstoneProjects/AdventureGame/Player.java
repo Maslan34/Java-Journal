@@ -13,12 +13,17 @@ public class Player {
     private int health;
     private int coin;
     private Inventory inventory;
+    private int fullHealth;
     private String playerName;
 
     private static Scanner input = new Scanner(System.in);
 
     public Player(String playerName) {
         this.playerName = playerName;
+    }
+
+    public int getTotalDamage() {
+        return damage + this.getInventory().getWeapon().getDamage();
     }
 
     public int getDamage() {
@@ -61,6 +66,15 @@ public class Player {
         this.inventory = inventory;
     }
 
+    public int getFullHealth() {
+        return fullHealth;
+    }
+
+    public void setFullHealth(int fullHealth) {
+        this.fullHealth = fullHealth;
+    }
+
+
     public void selectCharacter() {
         GameCharacter[] characters = {new Samurai(), new Archer(), new Knight(),};
         System.out.println("Please select a character: \n");
@@ -97,6 +111,7 @@ public class Player {
         setDamage(gameCharacter.getDamage());
         setHealth(gameCharacter.getHealth());
         setCoin(gameCharacter.getCoin());
+        setFullHealth(gameCharacter.getHealth());
         System.out.println("\n\nCharacter: ");
         System.out.printf("%-15s| %-5s| %-5s| %-5s%n", "Player Name", "Damage", "Health", "Coin");
         System.out.println("---------------------------------------");
@@ -105,6 +120,18 @@ public class Player {
                 this.getDamage(),
                 this.getHealth(),
                 this.getCoin());
+    }
+
+    public void printPlayerStats() {
+        System.out.println("Player Stats");
+        System.out.println("-------------------------");
+        System.out.println("Health: " + getHealth());
+        System.out.println("Damage: " + getTotalDamage());
+        System.out.println("Weapon: "+ getInventory().getWeapon().getName());
+        System.out.println("Armor: " + getInventory().getArmor().getName());
+        System.out.println("Block: "+ getInventory().getArmor().getBlock());
+        System.out.println("Coin: "+getCoin());
+        System.out.println();
     }
 
 }

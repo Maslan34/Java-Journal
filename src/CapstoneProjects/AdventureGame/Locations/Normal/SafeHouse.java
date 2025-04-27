@@ -11,7 +11,11 @@ public class SafeHouse extends NormalLocation {
     public boolean onLocation() {
         System.out.println("You are now Safe House!");
         System.out.println("Your health has been restored.");
-        getPlayer().setHealth(getPlayer().getHealth()-5);
+        System.out.println("The Awards You Have Gained:");
+        System.out.println(getPlayer().getInventory().isFoodObtained() ? "Food: --> \u2705" : "Food: --> \u274C");
+        System.out.println(getPlayer().getInventory().isWoodObtained() ? "Wood: -->\u2705" : "Wood: --> \u274C");
+        System.out.println(getPlayer().getInventory().isWaterObtained() ? "Water: --> \u2705" : "Water: --> \u274C");
+        getPlayer().setHealth(getPlayer().getFullHealth());
         return true;
     }
 }
