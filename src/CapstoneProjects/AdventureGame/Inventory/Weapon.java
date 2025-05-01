@@ -6,9 +6,9 @@ public class Weapon {
     private int damage;
     private int price;
     private static Weapon[] weapons = {
-            new Weapon(1, "Sword", 2, 2),
-            new Weapon(2, "Gun", 3, 4),
-            new Weapon(3, "Rifle", 7, 5)
+            new Weapon(1, "Sword", 20, 2),
+            new Weapon(2, "Gun", 30, 4),
+            new Weapon(3, "Rifle", 50, 5)
     };
 
     public Weapon(int id, String name, int damage, int price) {

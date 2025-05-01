@@ -6,9 +6,9 @@ public class Armor {
     private int price;
     private String name;
     private static Armor[] armors = {
-            new Armor(1, 1, 2, "Slight"),
-            new Armor(2, 3, 3, "Medium"),
-            new Armor(3, 5, 7, "Heavy"),
+            new Armor(1, 1, 20, "Slight"),
+            new Armor(2, 3, 30, "Medium"),
+            new Armor(3, 5, 50, "Heavy"),
     };
 
 

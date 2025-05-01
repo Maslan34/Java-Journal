@@ -77,7 +77,7 @@ public class Player {
 
     public void selectCharacter() {
         GameCharacter[] characters = {new Samurai(), new Archer(), new Knight(),};
-        System.out.println("Please select a character: \n");
+        System.out.println("\nPlease select a character: \n");
         System.out.printf("%-4s| %-12s| %-7s| %-7s| %-5s%n", "No", "Character", "Damage", "Health", "Coin");
         System.out.println("----|-------------|--------|--------|------");
         for (int i = 0; i < characters.length; i++) {
@@ -87,7 +87,7 @@ public class Player {
                     characters[i].getHealth(),
                     characters[i].getCoin());
         }
-        System.out.println("\n");
+        System.out.println();
         boolean isValid = false;
         while (!isValid) {
             System.out.print("\nYour selection: ");
@@ -120,6 +120,8 @@ public class Player {
                 this.getDamage(),
                 this.getHealth(),
                 this.getCoin());
+
+        System.out.println();
     }
 
     public void printPlayerStats() {

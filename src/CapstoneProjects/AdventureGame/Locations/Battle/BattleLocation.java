@@ -48,6 +48,10 @@ public abstract class BattleLocation extends Location {
         Random rand = new Random();
         return rand.nextInt(getMaxMonster()) + 1;
     }
+    public boolean randomInitiative(){
+        Random rand = new Random();
+       return rand.nextBoolean();
+    }
 
     @Override
     public boolean onLocation() {
@@ -67,12 +71,17 @@ public abstract class BattleLocation extends Location {
             boolean fightResult = fight();
             if (fightResult) {
 
+                System.out.println("\nCongratulations! There is no monster in the " + this.getLocationName() + ".");
+                this.getPlayer().getInventory().setFoodObtained();
+                System.out.println("You have obtained a very important item.");
+                System.out.println(this.getAward() + "!");
+
                 switch (getLocationName()) {
                     case "Cave":
                         this.getPlayer().getInventory().setFoodObtained();
                         break;
                     case "Forest":
-                        this.getPlayer().getInventory().setWaterObtained();
+                        this.getPlayer().getInventory().setWoodObtained();
                         break;
                     case "River":
                         this.getPlayer().getInventory().setWaterObtained();
@@ -91,22 +100,37 @@ public abstract class BattleLocation extends Location {
 
     public boolean fight() {
 
+        boolean initiative = this.randomInitiative();
+        int currentMonsterNumber = 1;
         while (this.getPlayer().getHealth() > 0 && this.remaningMonster > 0) {
             this.getPlayer().printPlayerStats();
-            if (playerHit()) {
-                getPlayer().printPlayerStats();
-            } else {
-                if (monsterHit()) {
-                    System.out.println("You Have Died!\nGame is over!");
-                    return false;
-                } else {
-                    getPlayer().printPlayerStats();
-                    monsterStats(remaningMonster);
-                }
 
+            if(initiative){
+                if (playerHit()) {
+                    getPlayer().printPlayerStats();
+                    currentMonsterNumber++;
+                } else {
+                    if (monsterHit()) {
+                        System.out.println("You Have Died!\nGame is over!");
+                        return false;
+                    } else {
+                        getPlayer().printPlayerStats();
+                        monsterStats(currentMonsterNumber);
+                    }
+
+                }
+            }else{
+                if (monsterHit()){
+                    monsterStats(currentMonsterNumber);
+                } else {
+                    if (playerHit()) {
+                        getPlayer().printPlayerStats();
+                        currentMonsterNumber++;
+                    }
+                }
             }
+
             if (remaningMonster != 0) {
-                //afterHit();
                 System.out.println("\n1-To Keep Fighting");
                 System.out.println("2-To Run Away");
                 int selection = input.nextInt();
@@ -121,10 +145,6 @@ public abstract class BattleLocation extends Location {
 
 
         }
-        System.out.println("\nCongratulations! There is no monster in the " + this.getLocationName() + ".");
-        this.getPlayer().getInventory().setFoodObtained();
-        System.out.println("You have obtained a very important item.");
-        System.out.println(this.getAward() + "!");
         return true;
     }
 
@@ -141,7 +161,6 @@ public abstract class BattleLocation extends Location {
             this.getMonster().setHealth(this.getMonster().getFullHealth());
             return true;
         }
-        monsterStats(remaningMonster);
         return false;
     }
 
@@ -153,42 +172,18 @@ public abstract class BattleLocation extends Location {
             System.out.println("Your armor has blocked all damage from " + this.getMonster().getMonsterName());
         else
             this.getPlayer().setHealth(this.getPlayer().getHealth() - (this.getMonster().getDamage()- this.getPlayer().getInventory().getArmor().getBlock()) );
-
         if (this.getPlayer().getHealth() <= 0)
             return true;
         return false;
     }
 
-    public void monsterStats(int remamingMonster) {
-        System.out.println("Monster stats: ");
+    public void monsterStats(int currentMonsterNumber) {
+        System.out.println("\n"+currentMonsterNumber+".Monster stats: ");
         System.out.println("-------------------------");
         System.out.println("Health: " + getMonster().getHealth());
-        System.out.println("Remaming Monster: " + remamingMonster);
+        System.out.println("Remaming Monster: " + getRemaningMonster());
         System.out.println("Damage: " + getMonster().getDamage());
     }
 
-
-    public void afterHit() {
-        System.out.println("You Hit the " + this.getMonster().getMonsterName() + " to " + this.getPlayer().getTotalDamage());
-        getMonster().setHealth(getMonster().getHealth() - this.getPlayer().getTotalDamage());
-        if (getMonster().getHealth() <= 0) {
-            System.out.println("You Killed the " + this.getMonster().getMonsterName() + "!");
-            System.out.println("You earned " + this.getMonster().getPrize() + " coin!");
-            this.getPlayer().setCoin(this.getPlayer().getCoin() + this.getMonster().getPrize());
-            maxMonster--;
-            monsterStats(maxMonster);
-            if (maxMonster == 0) {
-                System.out.println("Congratulations! There is no monster in the " + this.getLocationName() + ".");
-                this.getPlayer().getInventory().setFoodObtained();
-                System.out.println("You have obtained a very important item.");
-                System.out.println(this.getAward() + "!");
-            } else {
-                System.out.println("Monster Hit " + this.getMonster().getDamage() + " to you!");
-                this.getPlayer().setHealth(this.getPlayer().getTotalDamage() - this.getMonster().getDamage());
-                if (this.getPlayer().getHealth() <= 0)
-                    System.out.println("You Have Died!\nGame is Over!");
-            }
-        }
-    }
 
 }

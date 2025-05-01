@@ -3,6 +3,7 @@ package CapstoneProjects.AdventureGame;
 import CapstoneProjects.AdventureGame.Inventory.Inventory;
 import CapstoneProjects.AdventureGame.Locations.Battle.Cave;
 import CapstoneProjects.AdventureGame.Locations.Battle.Forest;
+import CapstoneProjects.AdventureGame.Locations.Battle.Mine;
 import CapstoneProjects.AdventureGame.Locations.Battle.River;
 import CapstoneProjects.AdventureGame.Locations.Location;
 import CapstoneProjects.AdventureGame.Locations.Normal.InventoryStore;
@@ -30,8 +31,9 @@ public class Game {
 
             boolean isValid = false;
 
-            System.out.println("\n\nLocations: \n1-Safe House --> This is a safe house for you. There are no monsters here and you can regenerate your health here." +
-                    "\n2-Inventory Store --> You can purchase Weapons or Armor.\n3-Cave --> Reward<Food> Enter Cave\n4-Forest --> Reward<Wood> Enter Forest\n5-River --> Reward<Water> Enter River");
+            System.out.println("\nLocations: \n1-Safe House --> This is a safe house for you. There are no monsters here and you can regenerate your health here." +
+                    "\n2-Inventory Store --> You can purchase Weapons or Armor.\n3-Cave --> Reward<Food> Enter Cave\n4-Forest --> Reward<Wood> Enter Forest" +
+                    "\n5-River --> Reward<Water> Enter River\n6-Mine --> You can earn new things such as Weapon, Armor, Coin here.");
 
             while (!isValid) {
                 System.out.print("Please select a location you want to go: ");
@@ -40,6 +42,7 @@ public class Game {
                     int location = input.nextInt();
                     switch (location) {
                         case 1:
+
                             loc = new SafeHouse(player);
                             isValid = true;
                             break;
@@ -48,15 +51,32 @@ public class Game {
                             isValid = true;
                             break;
                         case 3:
+                            if (player.getInventory().isFoodObtained()) {
+                                System.out.println("\nYou have already obtained Food !\nYou do not need to enter here!\n");
+                                break;
+                            }
+
                             loc = new Cave(player);
                             isValid = true;
                             break;
                         case 4:
+                            if (player.getInventory().isWoodObtained()) {
+                                System.out.println("\nYou have already obtained Wood !\nYou do not need to enter here!\n");
+                                break;
+                            }
                             loc = new Forest(player);
                             isValid = true;
                             break;
                         case 5:
+                            if (player.getInventory().isWaterObtained()) {
+                                System.out.println("\nYou have already obtained Water !\nYou do not need to enter here!\n");
+                                break;
+                            }
                             loc = new River(player);
+                            isValid = true;
+                            break;
+                        case 6:
+                            loc = new Mine(player);
                             isValid = true;
                             break;
                         default:

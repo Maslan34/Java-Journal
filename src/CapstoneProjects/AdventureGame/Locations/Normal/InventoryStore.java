@@ -84,15 +84,11 @@ public class InventoryStore extends NormalLocation {
             System.out.println("You have already this weapon!");
         else{
             System.out.println("You have purchased "+ weapon.getName()+" weapon");
-            // Removing current weapon damage from player
-            getPlayer().setDamage( getPlayer().getDamage()- getPlayer().getInventory().getWeapon().getDamage() );
-            // Removing current weapon damage from player
 
-            damage= getPlayer().getDamage()+weapon.getDamage();
-            getPlayer().setDamage(damage);
+
             getPlayer().setCoin(getPlayer().getCoin() - weapon.getPrice());
             getPlayer().getInventory().setWeapon(weapon);
-            System.out.println("You gained strength now. Your current damage is "+ damage);
+            System.out.println("You gained strength now. Your current damage is "+ getPlayer().getTotalDamage());
             System.out.println("Your remaining coin: "+getPlayer().getCoin());
 
         }
