@@ -1,0 +1,13 @@
+[
+  {
+    "nationalId": "1234567890",
+    "firstName": "Muharrem",
+    "lastName": "Aslan",
+    "dateOfBirth": "May 8, 1998, 12:00:00 AM",
+    "password": "12345",
+    "balance": 4050.0,
+    "creditLoan": 357.0,
+    "creditCartRecipt": 1253.0
+  }
+
+]
