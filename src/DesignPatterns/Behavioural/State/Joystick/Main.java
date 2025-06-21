@@ -1,4 +1,4 @@
-package DesignPatterns.State.Joystick;
+package DesignPatterns.Behavioural.State.Joystick;
 
 // Behavioural
 // State :Bir nesnenin iç durumuna göre davranışını değiştirmesini sağlar.

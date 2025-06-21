@@ -1,4 +1,4 @@
-package DesignPatterns.State;
+package DesignPatterns.Behavioural.State;
 
 public class Canvas {
     private Tool currentTool;

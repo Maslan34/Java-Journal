@@ -1,4 +1,4 @@
-package DesignPatterns.State;
+package DesignPatterns.Behavioural.State;
 
 public class MainTool {
     public static void main(String[] args) {

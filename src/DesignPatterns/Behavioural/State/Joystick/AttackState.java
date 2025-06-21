@@ -1,4 +1,4 @@
-package DesignPatterns.State.Joystick;
+package DesignPatterns.Behavioural.State.Joystick;
 
 public class AttackState implements Joystick {
     @Override
