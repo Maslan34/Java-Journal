@@ -58,35 +58,38 @@ public class CartUI extends JFrame {
 
         ArrayList<Product> products = basketController.findBasket(basket.get_id());
 
-        System.out.println("products " + products);
+        //DEBUG:check products
+        //System.out.println("products " + products);
 
 
         lbl_cart_save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Check if the date field is empty
                 if (Helper.isTextFieldEmpty(fld_cart_date)) {
                     Helper.showMessage("Please enter a date");
                 } else {
                     Cart cart = new Cart();
                     for (Product product : products) {
+                        // Skip products that are out of stock
                         if (product.getStock() <= 0)
                             continue;
 
-
+                        // Set cart details
                         cart.setCustomer(customer);
                         cart.setPrice(product.getPrice());
                         cart.setDate(LocalDate.parse(fld_cart_date.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                         cart.setNote(txtArea_cart.getText());
 
-                        // ✅ Ürün listesini ata
-                        ArrayList<Product> productList = new ArrayList(); // 🔥 Türü belirttik
-                        productList.add(product);  // Ürünü listeye ekle
-                        cart.setProducts(productList); // ✅ Ürün listesini ata
-
+                        // Assign the product list
+                        ArrayList<Product> productList = new ArrayList();
+                        productList.add(product);  // Add the product to the list
+                        cart.setProducts(productList);
 
                     }
+                    // Save the cart using the cart controller
                     cart.setProducts(products);
-                    cartController.save(cart); // ✅ Artık hata almazsın!
+                    cartController.save(cart);
                     Helper.showMessage("ORDER_CREATED");
                     dispose();
                 }

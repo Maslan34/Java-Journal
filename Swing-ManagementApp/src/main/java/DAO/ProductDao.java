@@ -110,7 +110,7 @@ public class ProductDao {
 
         if (stock != null) {
             if (stock == 1) {
-                filters.add(Filters.gt("stock", 0)); // Stokta olanları getir (stock > 0)
+                filters.add(Filters.gt("stock", 0)); // Get items in stock (stock > 0)
             } else if (stock == 2) {
                 filters.add(Filters.eq("stock", 0));
             }

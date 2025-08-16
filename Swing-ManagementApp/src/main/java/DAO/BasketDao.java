@@ -4,7 +4,7 @@ import Core.MongoDBConnection;
 import Entity.Basket;
 import Entity.Customer;
 import Entity.Product;
-import com.mongodb.client.FindIterable;
+
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -22,20 +22,16 @@ public class BasketDao {
     private MongoDBConnection mongoDBConnection;
     private ProductDao productDao = new ProductDao();
 
-    public BasketDao (){
+    public BasketDao() {
         this.mongoDBConnection = MongoDBConnection.getInstance();
     }
-
-
 
 
     public boolean update(Customer customer) {
         try {
             MongoCollection<Document> collection = MongoDBConnection.getCollection("Customers");
 
-
             ObjectId objectId = new ObjectId(customer.getId());
-
 
             Document updateFields = new Document()
                     .append("name", customer.getName())
@@ -52,8 +48,9 @@ public class BasketDao {
             System.out.println("Error Updating Customer: " + e.getMessage());
             return false;
         }
-    };
+    }
 
+    ;
 
 
     public String save(Basket basket) {
@@ -61,9 +58,8 @@ public class BasketDao {
             MongoCollection<Document> collection = MongoDBConnection.getCollection("Baskets");
 
 
-
             if (basket.get_id() != null) {
-                // Eğer basket ID varsa, mevcut basketi bul ve güncelle
+                // If a basket ID exists, find and update the existing basket
                 ObjectId objectId = new ObjectId(basket.get_id());
                 Document existingBasket = collection.find(Filters.eq("_id", objectId)).first();
 
@@ -71,24 +67,26 @@ public class BasketDao {
 
                     UpdateResult updateResult = collection.updateOne(
                             Filters.eq("_id", objectId),
-                            Updates.push("products", basket.getProduct().getId()) // Ürünü diziye ekler
+                            Updates.push("products", basket.getProduct().getId()) // Adds the product to the array
                     );
 
                     if (updateResult.getModifiedCount() > 0) {
                         System.out.println("Basket updated: " + basket.getProduct().getId());
-                        return basket.get_id(); // Mevcut basketin ID'sini döndür
+                        return basket.get_id(); // Return the ID of the current basket
                     }
                 }
             }
 
-            // Eğer basket ID yoksa veya mevcut basket bulunamadıysa, yeni bir basket oluştur
+            // If there is no basket ID or the current basket is not found, create a new basket
+
             Document basketDoc = new Document()
-                    .append("products", Arrays.asList(basket.getProduct().getId())); // İlk ürünü array olarak ekle
+                    .append("products", Arrays.asList(basket.getProduct().getId())); // Add the first product as an array
 
             collection.insertOne(basketDoc);
 
             ObjectId insertedId = basketDoc.getObjectId("_id");
-            return insertedId.toHexString(); // Yeni oluşturulan basketin ID'sini döndür
+            return insertedId.toHexString();// Return the ID of the newly created basket
+
         } catch (Exception e) {
             System.out.println("Error Saving Basket: " + e.getMessage());
             return null;
@@ -107,15 +105,18 @@ public class BasketDao {
             Document basketDoc = collection.find(Filters.eq("_id", new ObjectId(basketID))).first();
 
             if (basketDoc != null) {
-                // Basket ID'yi ata
+                // Assign the basket ID
+
                 String basketId = basketDoc.getObjectId("_id").toHexString();
 
-                // "products" dizisini al
+                // Get the 'products' array
+
                 if (basketDoc.containsKey("products") && basketDoc.get("products") != null) {
                     List<String> productIds = basketDoc.getList("products", String.class);
 
                     for (String productId : productIds) {
-                        Product product = productDao.findById(productId); // ID ile ürünü bul
+                        Product product = productDao.findById(productId); // Find the product by ID
+
                         if (product != null) {
                             products.add(product);
                         }
@@ -130,12 +131,6 @@ public class BasketDao {
 
         return products;
     }
-
-
-
-
-
-
 
 
 }

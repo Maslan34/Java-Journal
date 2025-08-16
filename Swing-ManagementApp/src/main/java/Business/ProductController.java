@@ -1,13 +1,9 @@
 package Business;
 
-import DAO.CustomerDao;
+import Core.Helper;
 import DAO.ProductDao;
-import Entity.Customer;
 import Entity.Product;
-
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class ProductController {
 
@@ -31,13 +27,13 @@ public class ProductController {
         return this.productDao.delete(product);
     }
 
-    public ArrayList<Product> filter(String name , String code,int stock) {
-        return this.productDao.filter(name,code,stock);
+    public ArrayList<Product> filter(String name, String code, int stock) {
+        return this.productDao.filter(name, code, stock);
     }
 
     public boolean update(Product product) {
-        if(product.getId() == null) {
-            JOptionPane.showMessageDialog(null, "Product Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (product.getId() == null) {
+            Helper.showMessage("PRODUCT_NOT_FOUND");
             return false;
         }
         return this.productDao.update(product);

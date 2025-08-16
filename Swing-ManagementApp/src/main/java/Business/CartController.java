@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CartController {
     private final CartDao cartDao = new CartDao();
-    private final ProductDao productDao = new ProductDao(); // ✅ Product işlemleri için
+    private final ProductDao productDao = new ProductDao();
 
     public ArrayList<Cart> findAll() {
         return this.cartDao.findAll();
@@ -30,14 +30,12 @@ public class CartController {
                 productIDs.add(product.getId());
                 totalPrice += product.getPrice();
             } else {
-                System.out.println("Ürün stokta yok: " + existingProduct.getName());
+                System.out.println(" Product is out of stock: " + existingProduct.getName());
                 return false;
             }
         }
 
-
         cart.setPrice(totalPrice);
-
 
         return cartDao.save(cart);
     }

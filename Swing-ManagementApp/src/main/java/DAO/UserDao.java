@@ -17,7 +17,7 @@ public class UserDao {
         try {
             MongoCollection<Document> collection = MongoDBConnection.getCollection("Users");
 
-            // Kullanıcıyı username ve password'e göre ara
+            // Find the user by username and password
             Document userDoc = collection.find(
                     Filters.and(
                             Filters.eq("username", username),
@@ -30,13 +30,13 @@ public class UserDao {
                         userDoc.getObjectId("_id").toString(),
                         userDoc.getString("username"),
                         userDoc.getString("mail"),
-                        userDoc.getString("password") // Gerçek sistemlerde şifreyi döndürme!
+                        userDoc.getString("password") // In a real application, the password must be encrypted
                 );
             }
         } catch (Exception e) {
             System.out.println("Error Finding User: " + e.getMessage());
         }
-        return null; // Kullanıcı bulunamazsa null dön
+        return null; // Return null if the user is not found
     }
 }
 

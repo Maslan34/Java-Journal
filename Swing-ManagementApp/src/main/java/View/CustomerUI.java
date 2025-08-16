@@ -46,8 +46,8 @@ public class CustomerUI extends JFrame {
 
         if (customer.getId() == null) {
             this.setTitle("Add New Customer");
-        }
-        else{
+        } else {
+            // If the customer has an ID, set the title to "Edit Customer" and populate the fields with existing data
             this.setTitle("Edit Customer");
             this.fld_name.setText(customer.getName());
             this.fld_phone.setText(customer.getPhone());
@@ -59,37 +59,34 @@ public class CustomerUI extends JFrame {
         btn_save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JTextField[] check = {fld_mail,fld_name,fld_phone};
-                if(Helper.isTextFieldListEmpty(check)){
-                    JOptionPane.showMessageDialog(null, "Fill the field properley! ", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-                else if( !(Helper.isTextFieldEmpty(fld_mail)) && !(Helper.isValidEmail(fld_mail.getText())) ){
-                    JOptionPane.showMessageDialog(null, "Please enter valid mail! ", "Error", JOptionPane.ERROR_MESSAGE);
-                }else {
-                    boolean result=false;
+                JTextField[] check = {fld_mail, fld_name, fld_phone};
+                if (Helper.isTextFieldListEmpty(check)) {
+                    Helper.showMessage("FILL_PROPERLEY");
+                } else if (!(Helper.isTextFieldEmpty(fld_mail)) && !(Helper.isValidEmail(fld_mail.getText()))) {
+                    Helper.showMessage("INVALID_MAIL");
+                } else {
+                    boolean result = false;
 
+                    // Set customer properties from the form fields
                     customer.setPhone(fld_phone.getText());
                     customer.setMail(fld_mail.getText());
                     customer.setName(fld_name.getText());
                     customer.setAddress(txtArea_adress.getText());
                     customer.setType((Customer.ETYPE) cmb_type.getSelectedItem());
 
+                    // If the customer has no ID, it's a new customer, so save it
                     if (customer.getId() == null || customer.getId().toString().isEmpty()) {
 
                         result = customerController.save(customer);
-                    }
-                    else{
-
+                    } else {
+                        // If the customer has an ID, update the existing customer
                         result = customerController.update(customer);
                     }
-
-                    if(result == true){
-                        JOptionPane.showMessageDialog(null, "Customer Updated Successfuly!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    if (result == true) {
+                        Helper.showMessage("CUSTOMER_UPDATED_SUCCESSFULLY");
                         dispose();
-
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Customer Not Added Successfuly!", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        Helper.showMessage("CUSTOMER_UPDATED_FAILED");
                     }
                 }
 

@@ -360,7 +360,9 @@ public class DashboardUI extends JFrame {
 
                 String result = basketController.save(this.basket);
                 basket.set_id(result);
-                System.out.println("Basket Id-> " + this.basket.get_id());
+
+                //DEBUG:check basket id
+                //System.out.println("Basket Id-> " + this.basket.get_id());
 
                 loadBasketTable();
 
@@ -374,16 +376,6 @@ public class DashboardUI extends JFrame {
 
             }
 
-            /*
-            ProductUI productUI = new ProductUI(editedProduct);
-            productUI.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosed(WindowEvent e) {
-                    loadProductTable(null);
-                }
-            });
-
-             */
 
 
         });
@@ -480,8 +472,8 @@ public class DashboardUI extends JFrame {
 
         }
 
-
-        System.out.println("Baskets-> " + products);
+        //DEBUG:check baskets
+        //System.out.println("Baskets-> " + products);
 
         this.lbl_basket_price.setText(totalPrice + " TL");
         this.lbl_basket_count.setText((products == null) ? "0 Item" : products.size() + " Item");
@@ -521,7 +513,7 @@ public class DashboardUI extends JFrame {
         ArrayList<Cart> orders= cartController.findAll();
 
         for (Cart cart : orders) {
-            for (Product product : cart.getProducts()) { // ✅ Her ürün için ayrı satır oluştur
+            for (Product product : cart.getProducts()) { //  Create a separate row for each product
                 this.table_model_orders.addRow(new Object[]{
                         cart.getId(),
                         cart.getCustomer().getName(),

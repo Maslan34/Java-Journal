@@ -58,31 +58,31 @@ public class ProductUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 JTextField[] check = {fld_product_name, fld_product_code, fld_product_price, fld_product_stock};
                 if (Helper.isTextFieldListEmpty(check)) {
-                    JOptionPane.showMessageDialog(null, "Fill the field properley! ", "Error", JOptionPane.ERROR_MESSAGE);
+                    Helper.showMessage("FILL_PROPERLEY");
                 } else {
                     boolean result = false;
-
+                    // Set product properties from the form fields
                     product.setName(fld_product_name.getText());
                     product.setCode(fld_product_code.getText());
                     product.setPrice(Integer.parseInt(fld_product_price.getText()));
                     product.setStock(Integer.parseInt(fld_product_stock.getText()));
 
+                    // If the product has no ID, it is a new product, so save it
                     if (product.getId() == null || product.getId().toString().isEmpty()) {
-
                         result = productController.save(product);
-
                     } else {
-
+                        // If the product has an ID, update the existing product
                         result = productController.update(product);
                     }
+
 
                     if (result == true) {
                         Helper.showMessage("SUCCESS_UPDATE_PRODUCT");
                         dispose();
-
                     } else {
                         Helper.showMessage("FAIL_UPDATE_PRODUCT");
                     }
+
                 }
             }
         });

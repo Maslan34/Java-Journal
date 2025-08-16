@@ -1,9 +1,8 @@
 package Business;
 
+import Core.Helper;
 import DAO.CustomerDao;
 import Entity.Customer;
-
-import javax.swing.*;
 import java.util.ArrayList;
 
 
@@ -26,13 +25,13 @@ public class CustomerController {
         return this.customerDao.delete(customer);
     }
 
-    public ArrayList<Customer> filter(String name ,String type) {
-        return this.customerDao.filter(name,type);
+    public ArrayList<Customer> filter(String name, String type) {
+        return this.customerDao.filter(name, type);
     }
 
     public boolean update(Customer customer) {
-        if(customer.getId() == null) {
-            JOptionPane.showMessageDialog(null, "Customer Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+        if (customer.getId() == null) {
+            Helper.showMessage("CUSTOMER_NOT_FOUND");
             return false;
         }
         return this.customerDao.update(customer);

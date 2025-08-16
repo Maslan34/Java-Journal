@@ -31,30 +31,30 @@ public class LoginUI extends JFrame {
         setLocationRelativeTo(null);
         this.setVisible(true);
 
-
+        // Add event listener to the submit button
         btn_submit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String username = fld_username.getText();
                 String password = new String(fld_password.getPassword());
-                System.out.println(username + " " + password);
-                // 🛠 Boş giriş kontrolü
+
+                //Debug:check field input
+                //System.out.println(username + " " + password);
+
+                // Empty input validation
                 if (Helper.isTextFieldListEmpty(new JTextField[]{fld_username, fld_password})) {
-                    JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Error", JOptionPane.ERROR_MESSAGE);
+                   Helper.showMessage("VALIDATION_FAILED");
                     return;
                 }
-
                 User user = userController.findByLogin(username, password);
-                System.out.println(user);
+                //DEBUG:check user
+                //System.out.println("user:"user);
                 if (user != null) {
-
-                    JOptionPane.showMessageDialog(null, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    Helper.showMessage("LOGIN_SUCCESS");
                     dispose();
                     DashboardUI dashboardUI = new DashboardUI(user);
-
-                    System.out.println("User found: " + user);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Invalid email or password", "Error", JOptionPane.ERROR_MESSAGE);
+                   Helper.showMessage("INVALID_CREDENTIALS");
                 }
             }
         });

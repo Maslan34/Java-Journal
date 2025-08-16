@@ -34,39 +34,42 @@ public class Helper {
     }
 
     public static boolean isValidEmail(String email) {
+        // Check if the email is null or empty
         if (email == null || email.isEmpty()) return false;
 
+        // Check if email contains "@"
         if (email.contains("@")) {
             String[] parts = email.split("@");
 
-            // "@" sembolü birden fazla olmamalı ve iki parçaya ayrılmalı
+            // There must be exactly one "@" symbol and the email should split into two parts
             if (parts.length != 2) return false;
 
-            String localPart = parts[0].trim(); // "@" sembolünün sol tarafı
-            String domainPart = parts[1].trim(); // "@" sembolünün sağ tarafı
+            String localPart = parts[0].trim();   // The part before "@"
+            String domainPart = parts[1].trim();  // The part after "@"
 
-            // Local ve domain kısmı boş olamaz
+            // Both local and domain parts must not be empty
             if (localPart.isEmpty() || domainPart.isEmpty()) return false;
 
-            // Domain kısmında en az bir "." olmalı ve son karakter "." olamaz
+            // Domain part must contain at least one ".", and must not start or end with "."
             if (!domainPart.contains(".") || domainPart.startsWith(".") || domainPart.endsWith(".")) {
                 return false;
             }
 
-            // Domain kısmının uzantısını kontrol et (.com, .net gibi en az 2 harfli bir uzantı olmalı)
+            // Check the domain extension (e.g., .com, .net); it must be at least 2 characters
             String[] domainParts = domainPart.split("\\.");
-            if (domainParts.length < 2) return false; // "example.com" gibi en az iki parça olmalı
-            if (domainParts[domainParts.length - 1].length() < 2) return false; // ".c" gibi geçersiz uzantıları engelle
+            if (domainParts.length < 2) return false; // Must have at least two parts like "example.com"
+            if (domainParts[domainParts.length - 1].length() < 2) return false; // Prevent invalid extensions like ".c"
 
-            return true; // Eğer tüm kontroller geçtiyse, e-posta geçerlidir
+            return true; // All checks passed, email is valid
         }
-        return true;
+        // Email must contain "@"
+        return false;
     }
+
 
     public static boolean confirmDelete(String str) {
         String title = "";
         String msg = "";
-
 
         switch (str) {
             case "sure_product":
@@ -91,7 +94,51 @@ public class Helper {
             case "FAIL_UPDATE_PRODUCT":
                 JOptionPane.showMessageDialog(null, "Product  Not Updated Successfuly!", "Fail", JOptionPane.INFORMATION_MESSAGE);
                 break;
-
+            case "PRODUCT_STOCK_INSUFFICIENT":
+                JOptionPane.showMessageDialog(null, "Product Stock Insufficient!", "Fail", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "ADD_CART_SUCCESS":
+                JOptionPane.showMessageDialog(null, "Product Added Cart!", "Fail", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "ADD_CART_FAIL":
+                JOptionPane.showMessageDialog(null, "Product Not Added Cart!", "Fail", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "CART_SELECT_CUSTOMER":
+                JOptionPane.showMessageDialog(null, "Please  Select a Customer!", "Fail", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "CART_EMPTY":
+                JOptionPane.showMessageDialog(null, "Your Cart is Empty! Please add some product!", "Fail", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "ORDER_CREATED":
+                JOptionPane.showMessageDialog(null, "Order Created!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "VALIDATION_FAILED":
+                JOptionPane.showMessageDialog(null, "Please enter a username and password!", "Error", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "LOGIN_SUCCESS":
+                JOptionPane.showMessageDialog(null, "Login Successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "INVALID_MAIL":
+                JOptionPane.showMessageDialog(null, "Please enter valid mail! ", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "INVALID_CREDENTIALS":
+                JOptionPane.showMessageDialog(null, "Invalid email or password", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "PRODUCT_NOT_FOUND":
+                JOptionPane.showMessageDialog(null, "Product Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "CUSTOMER_NOT_FOUND":
+                JOptionPane.showMessageDialog(null, "Customer Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "FILL_PROPERLEY":
+                JOptionPane.showMessageDialog(null, "Fill the field properley! ", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
+            case "CUSTOMER_UPDATED_SUCCESSFULLY":
+                JOptionPane.showMessageDialog(null, "Customer Updated Successfuly!", "Success", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "CUSTOMER_UPDATED_FAILED":
+                JOptionPane.showMessageDialog(null, "Customer Not Added Successfuly!", "Error", JOptionPane.ERROR_MESSAGE);
+                break;
         }
 
     }

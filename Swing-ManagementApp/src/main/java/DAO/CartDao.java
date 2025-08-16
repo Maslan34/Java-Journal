@@ -39,12 +39,12 @@ public class CartDao {
                 cart.setDate(LocalDate.parse(cartDoc.getString("date")));
                 cart.setCustomer(this.customerDao.findById(cartDoc.getString("customerID")));
 
-                // ProductID'leri çek ve Product objelerine dönüştür
+                // Retrieve ProductIDs and convert them to Product objects
                 ArrayList<Product> products = new ArrayList<>();
                 for (String productId : cartDoc.getList("productIDs", String.class)) {
                     products.add(this.productDao.findById(productId));
                 }
-                cart.setProducts(products); // `List<Product>` olarak kaydet
+                cart.setProducts(products); // Save as a `List<Product>`
 
                 carts.add(cart);
             }
@@ -78,7 +78,7 @@ public class CartDao {
                     .append("date", cart.getDate().toString());
 
 
-            collection.insertOne(cartDoc); // ✅ Tek bir doküman olarak kaydet!
+            collection.insertOne(cartDoc); // Save as a single document!
 
             return true;
         } catch (Exception e) {

@@ -12,7 +12,7 @@ public class Cart {
     private String note;
     private LocalDate date;
     private Customer customer;
-    private ArrayList<Product> products; // ✅ Product dizisi yerine List<Product>
+    private ArrayList<Product> products;
 
     public Cart() {
     }
