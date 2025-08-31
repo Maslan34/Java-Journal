@@ -67,4 +67,6 @@ replay_pid*
 *.iml
 gradlew
 gradlew.bat
+workspace-id.txt
+App.class.uniqueId0
 

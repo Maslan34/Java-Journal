@@ -1,0 +1,1 @@
+This is Buffer Output Stream text.

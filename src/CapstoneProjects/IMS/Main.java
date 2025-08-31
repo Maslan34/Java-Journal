@@ -71,6 +71,7 @@ public class Main {
                     40000.0,
                     formatter.parse("01/06/2023"),
                     formatter.parse("01/06/2025"),4.0);
+            carInsurance.informInsurance();
         }catch (Exception e){
 
         }
@@ -82,7 +83,7 @@ public class Main {
             account.addInsurance(healthInsurance);
             System.out.println("Welcome");
             account.showUserInfo();
-            //account.getUserInsurancesInfo();
+            account.getUserInsurancesInfo();
 
         }catch (Exception e) {
             System.out.println(e.getMessage());

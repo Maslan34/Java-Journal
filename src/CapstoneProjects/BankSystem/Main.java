@@ -1,7 +1,6 @@
 package CapstoneProjects.BankSystem;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -14,7 +13,7 @@ public class Main {
         System.out.println("Welcome to Bank System");
 
 
-        int choice =0;
+        int choice = 0;
         while (choice != 3) {
             System.out.println("1-Login\n2-Register\n3-Exit");
             choice = scanner.nextInt();
@@ -58,7 +57,7 @@ public class Main {
                                                 System.out.println(" Please enter the amount to be transferred");
                                                 int amount = scanner.nextInt();
                                                 scanner.nextLine();
-                                                bank.transferMoney(accountNumber, amount,userLogged.get());
+                                                bank.transferMoney(accountNumber, amount, userLogged.get());
                                                 break;
                                             case 2:
                                                 System.out.println("You have a debt of " + userLogged.get().getCreditLoan());

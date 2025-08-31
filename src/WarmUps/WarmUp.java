@@ -1,3 +1,5 @@
+package WarmUps;
+
 import java.util.Scanner;
 
 public class WarmUp {

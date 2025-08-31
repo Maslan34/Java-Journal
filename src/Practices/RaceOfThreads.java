@@ -59,7 +59,7 @@ public class RaceOfThreads implements Runnable {
             e.printStackTrace();
         }
 
-        System.out.println("Çift Sayılar: " + race.evens);
-        System.out.println("Tek Sayılar: " + race.odds);
+        System.out.println("Even Numbers: " + race.evens);
+        System.out.println("Odd Numbers: " + race.odds);
     }
 }

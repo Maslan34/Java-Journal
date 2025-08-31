@@ -9,7 +9,7 @@ public class GuessNumber {
         int life = 5;
         int number = (int) (Math.random() * 101);
 
-        System.out.println("Welcome to the Quess Number Game");
+        System.out.println("Welcome to the Guess Number Game");
 
         do {
             System.out.println("Please enter a number between 0 and 100 (inclusive) ");
