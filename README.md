@@ -21,8 +21,9 @@
 - [Technologies & Tools Used](#️-technologies--tools-used)
 - [Key Learning Outcomes](#-key-learning-outcomes)
 - [What is Next?](#️-what-is-next)
-- [Screenshots](#-screenshots)
 - [Conclusion](#-conclusion)
+- [Screenshots](#-screenshots)
+
 
 
 ### 🎯 Learning Objectives Achieved
@@ -1052,10 +1053,9 @@ The journey demonstrates not just coding ability, but also:
 
 - **Software Engineering Principles**: Clean code, SOLID principles, design patterns
 - **Problem-Solving Skills**: Algorithmic thinking and efficient solution design
-- **Project Management**: Organized development with proper version control
 - **Continuous Learning**: Progressive skill building and knowledge application
 
-*This documentation serves as both a learning resource and a testament to the comprehensive Java development capabilities acquired through structured, hands-on practice.*
+*This documentation has been prepared for educational purposes and to serve as a learning resource.*
 
 ---
 
